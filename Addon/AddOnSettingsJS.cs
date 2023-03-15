@@ -93,6 +93,7 @@ namespace FT_ADDON.Addon
             if (!udtwo.createField("Amount", "Side Product Amount", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Sum)) return false;
             if (!udtwo.createField("SONo", "SO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false)) return false;
 
+
             UserTable udtwo1 = new UserTable("FTS_WO1", "Work Order Issued", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
             if (!udtwo1.createField("ItemCode", "Item Code", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo1.createField("ItemName", "Item Name", SAPbobsCOM.BoFieldTypes.db_Alpha, 200, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
