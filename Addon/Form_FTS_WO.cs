@@ -19,6 +19,7 @@ namespace FT_ADDON.Addon
         const string u_salestype = "U_SalesTyp";
         const string u_project = "U_Project";
         const string u_prodtype = "U_ProdType";
+        const string dtu_prodtype = "DTU_ProdType";
 
         const string dttype = "DT_Type";
         const string u_Type = "U_Type";
@@ -234,6 +235,8 @@ namespace FT_ADDON.Addon
         {
             GetMatrix(matrix).LoadFromDataSource();
             GetMatrix(matrix).Columns.Item(col).Cells.Item(row).Click();
+            if (oForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE)
+                oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
         }
         private void funcAfterCFLCopySO()
         {
@@ -241,6 +244,8 @@ namespace FT_ADDON.Addon
             oMatrix.LoadFromDataSource();
             funcArrangeGrids(matrix2, fTS_WO2);
             oForm.Items.Item("RcFolder").Click();
+            if (oForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE)
+                oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
         }
         private void funcAfterCFLExit()
         {
@@ -440,6 +445,15 @@ namespace FT_ADDON.Addon
                 {
                     try { oMatrix.Columns.Item(u_Quantity).Editable = false; } catch { }
                     try { oMatrix.Columns.Item(u_Weight).Editable = false; } catch { }
+                }
+                if (entry.Key == matrix1)
+                {
+                    var dt = oForm.DataSources.DataTables.Item(dtu_prodtype);
+                    var col = oMatrix.Columns.Item(u_prodtype);
+                    for (int x = 0; x < dt.Rows.Count; x++)
+                    {
+                        col.ValidValues.Add(dt.GetValue("Code", x).ToString(), dt.GetValue("Name", x).ToString());
+                    }
                 }
             }
             oForm.Update();
