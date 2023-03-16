@@ -14,7 +14,14 @@ namespace FT_ADDON.Addon
 
             //if (!udt.createField("Query", "Query", SAPbobsCOM.BoFieldTypes.db_Memo, 254, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!UserTable.createField("OIGE", "WONum", "WO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 15, "")) return false;
+            if (!UserTable.createField("OJDT", "WONum", "WO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 15, "")) return false;
             if (!UserTable.createField("OITM", "Spec", "Spec", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "")) return false;
+
+            if (!UserTable.createField("IGE1", "Weight", "Weight(kg/pc)", SAPbobsCOM.BoFieldTypes.db_Float, 0, "0", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
+            if (!UserTable.createField("IGE1", "WOIMCost", "WO Input Material Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "0", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
+            if (!UserTable.createField("IGE1", "WOIPCost", "WO Input Process Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "0", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
+            if (!UserTable.createField("IGE1", "WOSPValue", "WO Side Product Value", SAPbobsCOM.BoFieldTypes.db_Float, 0, "0", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
+            if (!UserTable.createField("IGE1", "WOOPCost", "WO Output Process Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "0", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
 
             UserTable WOINPUTCOST = new UserTable("WOINPUTCOST", "WO Order Input Cost", SAPbobsCOM.BoUTBTableType.bott_MasterData);
             if (!WOINPUTCOST.createField("WOType", "WO Type", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
