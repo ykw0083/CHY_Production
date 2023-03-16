@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AddOnRegData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SlientInstallation="No" SlientUpgrade="No" Partnernmsp="FT" SchemaVersion="3.0" Type="" MultipleVersion="false" OnDemand="" OnPremise="" ExtName="Add-On-CHY_Production" ExtVersion="23.03.16.15.02" Contdata="YKW" Partner="Fast Track SBOi Sdn Bhd" DBType="Both" ClientType="W">
+<Validity><SBOCompatibility><Version From="9" To="10" /></SBOCompatibility></Validity><Configuration><Repository><Properties /></Repository><Deployment><Properties /></Deployment><Assignment><Properties /></Assignment></Configuration><Addons><Addon Name="" Group="" ForceFlag="" Visible="" AutoAssign="" SelfUpgrd="">
+<x64 AddonExe="" AddonSig=""><Installation><Files /></Installation><Uninstallation><Files /></Uninstallation></x64>
+<x86 AddonExe="D:\YKW\AddOn-MasterTemplate-CHY_Production\Installer\AddOnFiles\Runtime.exe" AddonSig=""><Installation><Files>
+<File FileName="Interop.SAPbobsCOM.dll"><Actions /></File>
+<File FileName="Interop.SAPbouiCOM.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.Shell.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.Shell.xml"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.xml"><Actions /></File>
+<File FileName="Newtonsoft.Json.dll"><Actions /></File>
+<File FileName="Newtonsoft.Json.xml"><Actions /></File>
+<File FileName="Runtime.exe"><Actions /></File>
+<File FileName="Runtime.exe.config"><Actions /></File>
+<File FileName="System.Net.Http.Formatting.dll"><Actions /></File>
+<File FileName="System.Net.Http.Formatting.xml"><Actions /></File>
+<File FileName="Addon\Form_FTS_WO.xml"><Actions /></File>
+<File FileName="Lib\TSCLIB_x64.dll"><Actions /></File>
+<File FileName="Lib\TSCLIB_x86.dll"><Actions /></File>
+<File FileName="Resources\arrow.jpg"><Actions /></File>
+<File FileName="Resources\arrowToLeft.jpg"><Actions /></File>
+<File FileName="Resources\CFL.bmp"><Actions /></File>
+<File FileName="Resources\Form_ActionResult.xml"><Actions /></File>
+<File FileName="Resources\FT_PurchaseOrder.xml"><Actions /></File>
+<File FileName="Resources\Loading.jpg"><Actions /></File>
+</Files></Installation><Uninstallation><Files>
+<File FileName="Interop.SAPbobsCOM.dll"><Actions /></File>
+<File FileName="Interop.SAPbouiCOM.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.Shell.dll"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.Shell.xml"><Actions /></File>
+<File FileName="Microsoft.WindowsAPICodePack.xml"><Actions /></File>
+<File FileName="Newtonsoft.Json.dll"><Actions /></File>
+<File FileName="Newtonsoft.Json.xml"><Actions /></File>
+<File FileName="Runtime.exe"><Actions /></File>
+<File FileName="Runtime.exe.config"><Actions /></File>
+<File FileName="System.Net.Http.Formatting.dll"><Actions /></File>
+<File FileName="System.Net.Http.Formatting.xml"><Actions /></File>
+<File FileName="Addon\Form_FTS_WO.xml"><Actions /></File>
+<File FileName="Lib\TSCLIB_x64.dll"><Actions /></File>
+<File FileName="Lib\TSCLIB_x86.dll"><Actions /></File>
+<File FileName="Resources\arrow.jpg"><Actions /></File>
+<File FileName="Resources\arrowToLeft.jpg"><Actions /></File>
+<File FileName="Resources\CFL.bmp"><Actions /></File>
+<File FileName="Resources\Form_ActionResult.xml"><Actions /></File>
+<File FileName="Resources\FT_PurchaseOrder.xml"><Actions /></File>
+<File FileName="Resources\Loading.jpg"><Actions /></File>
+</Files></Uninstallation></x86></Addon></Addons><XApps><XApp Name="" Path="" FileName="" /></XApps><UDQs><UDQ udqname=""><Hana FileName="" /></UDQ></UDQs></AddOnRegData>
