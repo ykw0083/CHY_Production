@@ -86,6 +86,18 @@ namespace FT_ADDON.Addon
 
         string defaultbtn { get => "1"; }
 
+        //void assignUDF(SAPbobsCOM.Fields udfs, SAPbobsCOM.Recordset rs, bool isheader)
+        //{
+        //    if (isheader)
+        //    {
+        //        udfs.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+        //        return;
+        //    }
+        //    foreach (var col in rs.Fields)
+        //    {
+        //        if (col.)
+        //    }
+        //}
         public Form_FTS_WO()
         {
             AddAfterItemFunc(SAPbouiCOM.BoEventTypes.et_FORM_ACTIVATE, activeFormAfter);
@@ -630,8 +642,12 @@ namespace FT_ADDON.Addon
                 oDoc.Lines.WarehouseCode = (string)rs.Fields.Item("WhsCode").Value;
                 oDoc.Lines.Quantity = (double)rs.Fields.Item("Quantity").Value;
                 oDoc.Lines.AccountCode = (string)rs.Fields.Item("Account").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
+                oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
+                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
 
                 if (!string.IsNullOrWhiteSpace((string)rs.Fields.Item("DistNumber").Value))
                 {
@@ -680,12 +696,21 @@ namespace FT_ADDON.Addon
                 oDoc.Lines.WarehouseCode = (string)rs.Fields.Item("WhsCode").Value;
                 oDoc.Lines.Quantity = (double)rs.Fields.Item("Quantity").Value;
                 oDoc.Lines.AccountCode = (string)rs.Fields.Item("Account").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
                 oDoc.Lines.LineTotal = (double)rs.Fields.Item("Amount").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOIMCost").Value = rs.Fields.Item("U_WOIMCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOSPValue").Value = rs.Fields.Item("U_WOSPCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOOPCost").Value = rs.Fields.Item("U_WOOPCost").Value;
+                oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
+                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOIMCost").Value = rs.Fields.Item("U_WOIMCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOSPValue").Value = rs.Fields.Item("U_WOSPCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOOPCost").Value = rs.Fields.Item("U_WOOPCost").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_BaseSONo").Value = rs.Fields.Item("U_BaseSONo").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_WOIPPCCost").Value = rs.Fields.Item("U_WOIPPCCost").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_WOIPSCCost").Value = rs.Fields.Item("U_WOIPSCCost").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_WORNCost").Value = rs.Fields.Item("U_WORNCost").Value;
+                oDoc.Lines.UserFields.Fields.Item("U_Length").Value = rs.Fields.Item("U_Length").Value;
 
                 if (!string.IsNullOrWhiteSpace((string)rs.Fields.Item("DistNumber").Value))
                 {
@@ -706,6 +731,7 @@ namespace FT_ADDON.Addon
         void funcCreateJournalEntry(string docEntry)
         {
             string spName = "FTS_sp_GetWOJournal";
+            //RecordSet rs = new RecordSet();
             SAPbobsCOM.Recordset rs = (SAPbobsCOM.Recordset)SAP.SBOCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
             rs.DoQuery($"exec {spName} {docEntry}");
             if (rs.RecordCount == 0)
@@ -738,6 +764,7 @@ namespace FT_ADDON.Addon
                     oDoc.Lines.Credit = (double)rs.Fields.Item("Amount").Value * -1;
                 oDoc.Lines.LineMemo =(string) rs.Fields.Item("LineMemo").Value;
                 oDoc.Lines.CostingCode = (string)rs.Fields.Item("ProfitCode").Value;
+                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
 
                 cnt++;
                 rs.MoveNext();
