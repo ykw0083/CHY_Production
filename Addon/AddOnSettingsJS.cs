@@ -99,6 +99,8 @@ namespace FT_ADDON.Addon
             if (!udtwo.createField("WhsCode", "Side Product Warehouse", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo.createField("Amount", "Side Product Amount", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Sum)) return false;
             if (!udtwo.createField("SONo", "SO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false)) return false;
+            if (!udtwo.createField("Project", "Project", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo.createField("SalesType", "Sales Type", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
 
 
             UserTable udtwo1 = new UserTable("FTS_WO1", "Work Order Issued", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
@@ -122,6 +124,8 @@ namespace FT_ADDON.Addon
             if (!udtwo1.createField("ProductionOther", "Production Others", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
             if (!udtwo1.createField("AverageCost", "Average Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Price)) return false;
             if (!udtwo1.createField("TotalCost", "Total Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Sum)) return false;
+            if (!udtwo1.createField("UOM", "UOM", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo1.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
 
             UserTable udtwo2 = new UserTable("FTS_WO2", "Work Order Received", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
             if (!udtwo2.createField("ItemCode", "Item Code", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
@@ -138,6 +142,9 @@ namespace FT_ADDON.Addon
             if (!udtwo2.createField("SalesType", "Sales Type", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo2.createField("Batch01", "Batch Attribute 01", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo2.createField("Batch02", "Batch Attribute 02", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo2.createField("UOM", "UOM", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo2.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo2.createField("SONo", "SO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false)) return false;
 
             UserTable udtwo3 = new UserTable("FTS_WO3", "Work Order Side Item", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
             if (!udtwo3.createField("ItemCode", "Item Code", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
@@ -148,6 +155,10 @@ namespace FT_ADDON.Addon
             if (!udtwo3.createField("MnfSerial", "Batch Ref.", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo3.createField("WhsCode", "Warehouse", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo3.createField("Amount", "Amount", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Sum)) return false;
+            if (!udtwo3.createField("UOM", "UOM", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo3.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo3.createField("Batch01", "Batch Attribute 01", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo3.createField("Batch02", "Batch Attribute 02", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
 
             udtwo.Children.Add(udtwo1);
             udtwo.Children.Add(udtwo2);

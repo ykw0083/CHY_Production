@@ -16,8 +16,6 @@ namespace FT_ADDON.Addon
         static int matrixCurrRow = 0;
         static string matrixActiveItem = "";
 
-        const string u_salestype = "U_SalesTyp";
-        const string u_project = "U_Project";
         const string u_prodtype = "U_ProdType";
         const string dtu_prodtype = "DTU_ProdType";
 
@@ -42,8 +40,10 @@ namespace FT_ADDON.Addon
         const string whsCode = "WhsCode";
         const string itemCode = "ItemCode";
         const string itemName = "ItemName";
+        const string invntryUom = "InvntryUom";
         const string u_itemCode = "U_ItemCode";
         const string u_itemName = "U_ItemName";
+        const string u_uom = "U_UOM";
         const string matrix1 = "grid1";
         const string matrix2 = "grid2";
         const string matrix3 = "grid3";
@@ -57,10 +57,15 @@ namespace FT_ADDON.Addon
         const string u_WhsCode = "U_WhsCode";
         const string u_Area = "U_Area";
 
-        const string visorder = "VisOrder";
+        const string u_salestype = "U_SalesTyp";
+        const string u_project = "U_Project";
+        const string btnsalestype = "btnSalesT";
+        const string btnproject = "btnProj";
         const string btnCopy = "btnCopy";
         const string btnSO = "btnSO";
         const string btnPost = "btnPost";
+
+        const string visorder = "VisOrder";
         const string menuAddRecord = "1282";
         const string menuDeleteDetailRow = "1293";
         const string menuCancelRecord = "1284";
@@ -163,7 +168,7 @@ namespace FT_ADDON.Addon
         }
         private void eventCFLSO()
         {
-            if (currentId == btnSO)
+            if (currentId == btnSO || currentId == btnproject || currentId == btnsalestype)
             {
                 string query = $"{oForm.TypeEx}.{currentId}.getData";
                 string query_script = SQLQuery.QueryCode(oForm, query);
@@ -196,7 +201,11 @@ namespace FT_ADDON.Addon
                 if (colId == u_itemCode || colId == u_WhsCode) return;
 
                 string curmatrix = currentId;
-                string curdsname = currentId == matrix1 ? fTS_WO1 : fTS_WO2;
+                string curdsname = "";
+                if (currentId == matrix1) curdsname = fTS_WO1;
+                if (currentId == matrix2) curdsname = fTS_WO2;
+                if (currentId == matrix3) curdsname = fTS_WO3;
+
                 GetMatrix(currentId).FlushToDataSource();
 
                 SAPbouiCOM.Matrix oMatrix = GetMatrix(curmatrix);
@@ -230,7 +239,9 @@ namespace FT_ADDON.Addon
             }
         }
         private void funcAfterCFLSO()
-        { }
+        {
+            if (oForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE) oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+        }
         private void funcAfterCFL(string matrix, string col, int row)
         {
             GetMatrix(matrix).LoadFromDataSource();
@@ -244,8 +255,7 @@ namespace FT_ADDON.Addon
             oMatrix.LoadFromDataSource();
             funcArrangeGrids(matrix2, fTS_WO2);
             oForm.Items.Item("RcFolder").Click();
-            if (oForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE)
-                oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+            if (oForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE) oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
         }
         private void funcAfterCFLExit()
         {
@@ -423,6 +433,8 @@ namespace FT_ADDON.Addon
             base.runtimeTweakAfter();
 
             GetButton(btnSO).Image = $"{System.Windows.Forms.Application.StartupPath}\\Resources\\CFL.bmp";
+            GetButton(btnproject).Image = $"{System.Windows.Forms.Application.StartupPath}\\Resources\\CFL.bmp";
+            GetButton(btnsalestype).Image = $"{System.Windows.Forms.Application.StartupPath}\\Resources\\CFL.bmp";
 
             GetButtonCombo(btnCopy).ValidValues.Add("Sales Order", "Sales Order");
             GetButtonCombo(btnCopy).ValidValues.Add("Reserve Invoice", "Reserve Invoice");
@@ -832,6 +844,7 @@ namespace FT_ADDON.Addon
             var item = oForm.Items.Item(currentId);
             string code = "";
             string name = "";
+            string uom = "";
             string tablename = null;
             string alias = null;
             SAPbouiCOM.Matrix grid = null;
@@ -842,6 +855,7 @@ namespace FT_ADDON.Addon
                     var txt = grid.Columns.Item(itemPVal.ColUID).Cells.Item(itemPVal.Row).Specific as SAPbouiCOM.EditText;
                     code = dt.GetValue(itemCode, 0).ToString();
                     name = dt.GetValue(itemName, 0).ToString();
+                    uom = dt.GetValue(invntryUom, 0).ToString();
                     tablename = txt.DataBind.TableName;
                     alias = u_itemCode;
                     break;
@@ -864,6 +878,7 @@ namespace FT_ADDON.Addon
                 grid.FlushToDataSource();
                 oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_itemCode, itemPVal.Row - 1, code);
                 oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_itemName, itemPVal.Row - 1, name);
+                oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_uom, itemPVal.Row - 1, uom);
                 string wh = "";
                 if (currentId == matrix1)
                     wh = oForm.GetUserSourceValue(ud_WhIs);
