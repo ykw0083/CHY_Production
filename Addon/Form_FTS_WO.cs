@@ -86,18 +86,31 @@ namespace FT_ADDON.Addon
 
         string defaultbtn { get => "1"; }
 
-        //void assignUDF(SAPbobsCOM.Fields udfs, SAPbobsCOM.Recordset rs, bool isheader)
-        //{
-        //    if (isheader)
-        //    {
-        //        udfs.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
-        //        return;
-        //    }
-        //    foreach (var col in rs.Fields)
-        //    {
-        //        if (col.)
-        //    }
-        //}
+        void assignUDF(SAPbobsCOM.Fields udfs, SAPbobsCOM.Recordset rs, bool isheader)
+        {
+            if (isheader)
+            {
+                try
+                {
+                    if (rs.Fields.Item("U_WONum")?.Value != null)
+                        udfs.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+                }
+                catch (Exception ex){ throw new Exception(ex.Message); }
+                return;
+            }
+            for (int x = 0; x < rs.Fields.Count; x++)
+            {
+                if (rs.Fields.Item(x).Name.Contains("U_") && rs.Fields.Item(x).Name != "U_WONum")
+                {
+                    try
+                    {
+                        if (rs.Fields.Item(x)?.Value != null)
+                            udfs.Item(rs.Fields.Item(x).Name).Value = rs.Fields.Item(x).Value;
+                    }
+                    catch { }
+                }
+            }
+        }
         public Form_FTS_WO()
         {
             AddAfterItemFunc(SAPbouiCOM.BoEventTypes.et_FORM_ACTIVATE, activeFormAfter);
@@ -627,7 +640,8 @@ namespace FT_ADDON.Addon
             oDoc.Reference2 = rs.Fields.Item("Ref2").Value.ToString();
             oDoc.Comments = rs.Fields.Item("Comments").Value.ToString();
             oDoc.JournalMemo = rs.Fields.Item("JrnlMemo").Value.ToString();
-            oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            //oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            assignUDF(oDoc.UserFields.Fields, rs, true);
 
             int cnt = 0;
             while (!rs.EoF)
@@ -642,12 +656,16 @@ namespace FT_ADDON.Addon
                 oDoc.Lines.WarehouseCode = (string)rs.Fields.Item("WhsCode").Value;
                 oDoc.Lines.Quantity = (double)rs.Fields.Item("Quantity").Value;
                 oDoc.Lines.AccountCode = (string)rs.Fields.Item("Account").Value;
-                oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
-                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
+                if (rs.Fields.Item("OcrCode")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("OcrCode").Value))
+                    oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
+                if (rs.Fields.Item("OcrCode2")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("OcrCode2").Value))
+                    oDoc.Lines.CostingCode2 = (string)rs.Fields.Item("OcrCode2").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
+
+                //oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
+                assignUDF(oDoc.Lines.UserFields.Fields, rs, false);
 
                 if (!string.IsNullOrWhiteSpace((string)rs.Fields.Item("DistNumber").Value))
                 {
@@ -681,7 +699,8 @@ namespace FT_ADDON.Addon
             oDoc.Reference2 = rs.Fields.Item("Ref2").Value.ToString();
             oDoc.Comments = rs.Fields.Item("Comments").Value.ToString();
             oDoc.JournalMemo = rs.Fields.Item("JrnlMemo").Value.ToString();
-            oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            //oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            assignUDF(oDoc.UserFields.Fields, rs, true);
 
             int cnt = 0;
             while (!rs.EoF)
@@ -697,20 +716,24 @@ namespace FT_ADDON.Addon
                 oDoc.Lines.Quantity = (double)rs.Fields.Item("Quantity").Value;
                 oDoc.Lines.AccountCode = (string)rs.Fields.Item("Account").Value;
                 oDoc.Lines.LineTotal = (double)rs.Fields.Item("Amount").Value;
-                oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
-                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
+                if (rs.Fields.Item("OcrCode")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("OcrCode").Value))
+                    oDoc.Lines.CostingCode = (string)rs.Fields.Item("OcrCode").Value;
+                if (rs.Fields.Item("OcrCode2")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("OcrCode2").Value))
+                    oDoc.Lines.CostingCode2 = (string)rs.Fields.Item("OcrCode2").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_Weight").Value = rs.Fields.Item("U_Weight").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_WOIPCost").Value = rs.Fields.Item("U_WOIPCost").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_WOIMCost").Value = rs.Fields.Item("U_WOIMCost").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_WOSPValue").Value = rs.Fields.Item("U_WOSPCost").Value;
                 //oDoc.Lines.UserFields.Fields.Item("U_WOOPCost").Value = rs.Fields.Item("U_WOOPCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_BaseSONo").Value = rs.Fields.Item("U_BaseSONo").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOIPPCCost").Value = rs.Fields.Item("U_WOIPPCCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WOIPSCCost").Value = rs.Fields.Item("U_WOIPSCCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_WORNCost").Value = rs.Fields.Item("U_WORNCost").Value;
-                oDoc.Lines.UserFields.Fields.Item("U_Length").Value = rs.Fields.Item("U_Length").Value;
+
+                //oDoc.Lines.UserFields.Fields.Item("U_TotalW").Value = rs.Fields.Item("U_TotalW").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_Machine").Value = rs.Fields.Item("U_Machine").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_BaseSONo").Value = rs.Fields.Item("U_BaseSONo").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOIPPCCost").Value = rs.Fields.Item("U_WOIPPCCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WOIPSCCost").Value = rs.Fields.Item("U_WOIPSCCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_WORNCost").Value = rs.Fields.Item("U_WORNCost").Value;
+                //oDoc.Lines.UserFields.Fields.Item("U_Length").Value = rs.Fields.Item("U_Length").Value;
+                assignUDF(oDoc.Lines.UserFields.Fields, rs, false);
 
                 if (!string.IsNullOrWhiteSpace((string)rs.Fields.Item("DistNumber").Value))
                 {
@@ -746,7 +769,8 @@ namespace FT_ADDON.Addon
             oDoc.Memo = rs.Fields.Item("Memo").Value.ToString();
             oDoc.Reference = rs.Fields.Item("Ref1").Value.ToString();
             oDoc.Reference2 = rs.Fields.Item("Ref2").Value.ToString();
-            oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            //oDoc.UserFields.Fields.Item("U_WONum").Value = rs.Fields.Item("U_WONum").Value.ToString();
+            assignUDF(oDoc.UserFields.Fields, rs, true);
 
             int cnt = 0;
             while (!rs.EoF)
@@ -763,8 +787,11 @@ namespace FT_ADDON.Addon
                 else
                     oDoc.Lines.Credit = (double)rs.Fields.Item("Amount").Value * -1;
                 oDoc.Lines.LineMemo =(string) rs.Fields.Item("LineMemo").Value;
-                oDoc.Lines.CostingCode = (string)rs.Fields.Item("ProfitCode").Value;
-                oDoc.Lines.ProjectCode = (string)rs.Fields.Item("OcrCode2").Value;
+                if (rs.Fields.Item("ProfitCode")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("ProfitCode").Value))
+                    oDoc.Lines.CostingCode = (string)rs.Fields.Item("ProfitCode").Value;
+                if (rs.Fields.Item("OcrCode2")?.Value != null && !string.IsNullOrEmpty((string)rs.Fields.Item("OcrCode2").Value))
+                    oDoc.Lines.CostingCode2 = (string)rs.Fields.Item("OcrCode2").Value;
+                assignUDF(oDoc.Lines.UserFields.Fields, rs, false);
 
                 cnt++;
                 rs.MoveNext();
