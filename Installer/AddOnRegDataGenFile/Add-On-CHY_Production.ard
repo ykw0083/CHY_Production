@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AddOnRegData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SlientInstallation="No" SlientUpgrade="No" Partnernmsp="FT" SchemaVersion="3.0" Type="" MultipleVersion="false" OnDemand="" OnPremise="" ExtName="Add-On-CHY_Production" ExtVersion="23.03.28.12.30" Contdata="YKW" Partner="Fast Track SBOi Sdn Bhd" DBType="Both" ClientType="W">
+<AddOnRegData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SlientInstallation="No" SlientUpgrade="No" Partnernmsp="FT" SchemaVersion="3.0" Type="" MultipleVersion="false" OnDemand="" OnPremise="" ExtName="Add-On-CHY_Production" ExtVersion="23.03.29.15.36" Contdata="YKW" Partner="Fast Track SBOi Sdn Bhd" DBType="Both" ClientType="W">
 <Validity><SBOCompatibility><Version From="9" To="10" /></SBOCompatibility></Validity><Configuration><Repository><Properties /></Repository><Deployment><Properties /></Deployment><Assignment><Properties /></Assignment></Configuration><Addons><Addon Name="" Group="" ForceFlag="" Visible="" AutoAssign="" SelfUpgrd="">
 <x64 AddonExe="" AddonSig=""><Installation><Files /></Installation><Uninstallation><Files /></Uninstallation></x64>
 <x86 AddonExe="D:\YKW\AddOn-MasterTemplate-CHY_Production\Installer\AddOnFiles\Runtime.exe" AddonSig=""><Installation><Files>
