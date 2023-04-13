@@ -10,7 +10,6 @@ namespace FT_ADDON.Addon
     [FormCode("Work_Order")]
     [MenuId("4352")]
     [Series("FTS_WO", "Series")]
-
     class Form_FTS_WO : Form_Base
     {
         static int matrixCurrRow = 0;
@@ -18,6 +17,8 @@ namespace FT_ADDON.Addon
 
         const string u_prodtype = "U_ProdType";
         const string dtu_prodtype = "DTU_ProdType";
+        const string u_machine = "U_Machine";
+        const string dtu_machine = "DTU_Machine";
 
         const string dttype = "DT_Type";
         const string u_Type = "U_Type";
@@ -40,6 +41,7 @@ namespace FT_ADDON.Addon
         const string whsCode = "WhsCode";
         const string itemCode = "ItemCode";
         const string itemName = "ItemName";
+        const string dfltwh = "DfltWH";
         const string invntryUom = "InvntryUom";
         const string u_itemCode = "U_ItemCode";
         const string u_itemName = "U_ItemName";
@@ -68,6 +70,7 @@ namespace FT_ADDON.Addon
         const string visorder = "VisOrder";
         const string menuAddRecord = "1282";
         const string menuDeleteDetailRow = "1293";
+        const string menuDuplicateRow = "1294";
         const string menuCancelRecord = "1284";
         const string menuRestoreRecord = "1285";
         const string menuCloseRecord = "1286";
@@ -188,6 +191,7 @@ namespace FT_ADDON.Addon
                 formobj.OpenForm();
                 formobj.retrieveGrid(true);
                 oForm.Freeze(true);
+                oForm.State = SAPbouiCOM.BoFormStateEnum.fs_Minimized;
             }
 
         }
@@ -285,6 +289,7 @@ namespace FT_ADDON.Addon
         private void funcAfterCFLExit()
         {
             oForm.Freeze(false);
+            oForm.State = SAPbouiCOM.BoFormStateEnum.fs_Restore;
         }
         private void funcAddRowSO()
         {
@@ -335,9 +340,12 @@ namespace FT_ADDON.Addon
             matrixCurrRow = currentRow;
             matrixActiveItem = currentId;
 
+            oForm.EnableMenu(menuDuplicateRow, false);
             oForm.EnableMenu(menuDeleteDetailRow, false);
             oForm.EnableMenu(menuCancelRecord, oForm.GetUserSourceValue(ud_Status) == statusOpen);
             if (!matrixDsDict.ContainsKey(itemPVal.ItemUID)) return;
+
+            oForm.EnableMenu(menuDuplicateRow, GetMatrix(itemPVal.ItemUID).RowCount > 0);
 
             oForm.EnableMenu(menuDeleteDetailRow, GetMatrix(itemPVal.ItemUID).RowCount > 0);
             oForm.EnableMenu(menuCancelRecord, false);
@@ -456,6 +464,7 @@ namespace FT_ADDON.Addon
         protected override void runtimeTweakAfter()
         {
             base.runtimeTweakAfter();
+            oForm.EnableFormatSearch();
 
             GetButton(btnSO).Image = $"{System.Windows.Forms.Application.StartupPath}\\Resources\\CFL.bmp";
             GetButton(btnproject).Image = $"{System.Windows.Forms.Application.StartupPath}\\Resources\\CFL.bmp";
@@ -471,6 +480,13 @@ namespace FT_ADDON.Addon
             oForm.Items.Item(u_Issued).SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, -1, SAPbouiCOM.BoModeVisualBehavior.mvb_False);
             oForm.Items.Item(u_Received).SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, -1, SAPbouiCOM.BoModeVisualBehavior.mvb_False);
 
+            var dtme = oForm.DataSources.DataTables.Item(dtu_machine);
+            var dtpt = oForm.DataSources.DataTables.Item(dtu_prodtype);
+            for (int x = 0; x < dtme.Rows.Count; x++)
+            {
+                SAPbouiCOM.ComboBox cmb = GetCombo(u_machine);
+                cmb.ValidValues.Add(dtme.GetValue("Code", x).ToString(), dtme.GetValue("Name", x).ToString());
+            }
             foreach (KeyValuePair<string, string> entry in matrixDsDict)
             {
                 SAPbouiCOM.Matrix oMatrix = GetMatrix(entry.Key);
@@ -485,11 +501,18 @@ namespace FT_ADDON.Addon
                 }
                 if (entry.Key == matrix1)
                 {
-                    var dt = oForm.DataSources.DataTables.Item(dtu_prodtype);
                     var col = oMatrix.Columns.Item(u_prodtype);
-                    for (int x = 0; x < dt.Rows.Count; x++)
+                    for (int x = 0; x < dtpt.Rows.Count; x++)
                     {
-                        col.ValidValues.Add(dt.GetValue("Code", x).ToString(), dt.GetValue("Name", x).ToString());
+                        col.ValidValues.Add(dtpt.GetValue("Code", x).ToString(), dtpt.GetValue("Name", x).ToString());
+                    }
+                }
+                if (entry.Key == matrix1 || entry.Key == matrix2 || entry.Key == matrix3)
+                {
+                    var col = oMatrix.Columns.Item(u_machine);
+                    for (int x = 0; x < dtme.Rows.Count; x++)
+                    {
+                        col.ValidValues.Add(dtme.GetValue("Code", x).ToString(), dtme.GetValue("Name", x).ToString());
                     }
                 }
             }
@@ -497,7 +520,7 @@ namespace FT_ADDON.Addon
 
             addNewRecord();
         }
-        void funcCalculateTotal(string gridname, string dbsource, int row)
+        void funcCalculateIssueTotal(string gridname, string dbsource)
         {
             var wo = oForm.DataSources.DBDataSources.Item(dbsource);
             var grid = GetMatrix(gridname);
@@ -514,10 +537,39 @@ namespace FT_ADDON.Addon
 
             grid.LoadFromDataSource();
 
-            if (gridname == matrix1)
-                oForm.DataSources.DBDataSources.Item(fTS_WO).SetValue(u_Issued, 0, total.ToString());
-            if (gridname == matrix2)
-                oForm.DataSources.DBDataSources.Item(fTS_WO).SetValue(u_Received, 0, total.ToString());
+            oForm.DataSources.DBDataSources.Item(fTS_WO).SetValue(u_Issued, 0, total.ToString());
+
+        }
+        void funcCalculateReceiveTotal()
+        {
+            decimal total = 0;
+
+            var wo = oForm.DataSources.DBDataSources.Item(fTS_WO2);
+            var grid = GetMatrix(matrix2);
+            grid.FlushToDataSource();
+
+            for (int x = 0; x < wo.Size; x++)
+            {
+                if (string.IsNullOrWhiteSpace(wo.GetValue(u_itemCode, x))) continue;
+
+                total += decimal.Parse(wo.GetValue(u_Weight, x));
+            }
+
+            grid.LoadFromDataSource();
+
+            wo = oForm.DataSources.DBDataSources.Item(fTS_WO3);
+            grid = GetMatrix(matrix3);
+            grid.FlushToDataSource();
+
+            for (int x = 0; x < wo.Size; x++)
+            {
+                if (string.IsNullOrWhiteSpace(wo.GetValue(u_itemCode, x))) continue;
+
+                total += decimal.Parse(wo.GetValue(u_Weight, x));
+            }
+
+            grid.LoadFromDataSource();
+            oForm.DataSources.DBDataSources.Item(fTS_WO).SetValue(u_Received, 0, total.ToString());
 
         }
         void calculateTotal()
@@ -526,9 +578,9 @@ namespace FT_ADDON.Addon
             if (!(colId == u_Weight || colId == u_Quantity)) return;
 
             if (currentId == matrix1)
-                funcCalculateTotal(matrix1, fTS_WO1, currentRow);
-            if (currentId == matrix2)
-                funcCalculateTotal(matrix2, fTS_WO2, currentRow);
+                funcCalculateIssueTotal(matrix1, fTS_WO1);
+            if (currentId == matrix2 || currentId == matrix3)
+                funcCalculateReceiveTotal();
 
         }
         void funcArrangeGrids(string gridname, string dbsource)
@@ -899,6 +951,7 @@ namespace FT_ADDON.Addon
             string code = "";
             string name = "";
             string uom = "";
+            string whs = "";
             string tablename = null;
             string alias = null;
             SAPbouiCOM.Matrix grid = null;
@@ -910,6 +963,7 @@ namespace FT_ADDON.Addon
                     code = dt.GetValue(itemCode, 0).ToString();
                     name = dt.GetValue(itemName, 0).ToString();
                     uom = dt.GetValue(invntryUom, 0).ToString();
+                    whs = dt.GetValue(dfltwh, 0).ToString();
                     tablename = txt.DataBind.TableName;
                     alias = u_itemCode;
                     break;
@@ -933,15 +987,15 @@ namespace FT_ADDON.Addon
                 oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_itemCode, itemPVal.Row - 1, code);
                 oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_itemName, itemPVal.Row - 1, name);
                 oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_uom, itemPVal.Row - 1, uom);
-                string wh = "";
-                if (currentId == matrix1)
-                    wh = oForm.GetUserSourceValue(ud_WhIs);
-                if (currentId == matrix2)
-                    wh = oForm.GetUserSourceValue(ud_WhRc);
-                if (currentId == matrix3)
-                    wh = oForm.GetUserSourceValue(ud_WhSd);
-
-                oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_WhsCode, itemPVal.Row - 1, wh);
+                oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_WhsCode, itemPVal.Row - 1, whs);
+                //string wh = "";
+                //if (currentId == matrix1)
+                //    wh = oForm.GetUserSourceValue(ud_WhIs);
+                //if (currentId == matrix2)
+                //    wh = oForm.GetUserSourceValue(ud_WhRc);
+                //if (currentId == matrix3)
+                //    wh = oForm.GetUserSourceValue(ud_WhSd);
+                //oForm.DataSources.DBDataSources.Item(tablename).SetValue(u_WhsCode, itemPVal.Row - 1, wh);
 
                 grid.LoadFromDataSource();
 

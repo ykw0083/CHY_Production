@@ -101,6 +101,7 @@ namespace FT_ADDON.Addon
             if (!udtwo.createField("SONo", "SO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false)) return false;
             if (!udtwo.createField("Project", "Project", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo.createField("SalesType", "Sales Type", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
 
 
             UserTable udtwo1 = new UserTable("FTS_WO1", "Work Order Issued", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
@@ -126,6 +127,7 @@ namespace FT_ADDON.Addon
             if (!udtwo1.createField("TotalCost", "Total Cost", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Sum)) return false;
             if (!udtwo1.createField("UOM", "UOM", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo1.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
+            if (!udtwo1.createField("Qty_PCS", "Qty PCS", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Quantity)) return false;
 
             UserTable udtwo2 = new UserTable("FTS_WO2", "Work Order Received", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
             if (!udtwo2.createField("ItemCode", "Item Code", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
@@ -145,6 +147,7 @@ namespace FT_ADDON.Addon
             if (!udtwo2.createField("UOM", "UOM", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo2.createField("Machine", "Machine Master", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
             if (!udtwo2.createField("SONo", "SO Number", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false)) return false;
+            if (!udtwo2.createField("Qty_PCS", "Qty PCS", SAPbobsCOM.BoFieldTypes.db_Float, 0, "", false, SAPbobsCOM.BoFldSubTypes.st_Quantity)) return false;
 
             UserTable udtwo3 = new UserTable("FTS_WO3", "Work Order Side Item", SAPbobsCOM.BoUTBTableType.bott_DocumentLines);
             if (!udtwo3.createField("ItemCode", "Item Code", SAPbobsCOM.BoFieldTypes.db_Alpha, 50, "", false, SAPbobsCOM.BoFldSubTypes.st_None)) return false;
